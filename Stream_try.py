@@ -16,10 +16,6 @@ def R0(x):
 def R1(x):
     return a * x + b
 
-# Define the cost function (could be more complex if needed)
-def Cost(x):
-    return C
-
 # Define the ratios with cost for R1
 def ratio_R0(x, k):
     return (R0(x)**k) / (C0**(1 - k))
@@ -42,8 +38,8 @@ R1_plot = ratio_R1(x, k)
 
 # Create a plot
 fig, ax = plt.subplots(figsize=(10, 6))
-ax.plot(x, R0_plot, label=f'R0(x)^{k} / C^(1-k)', color='blue')
-ax.plot(x, R1_plot, label=f'R1(x)^{k} / Cost(x)^{round(1-k, 2)}', color='red')
+ax.plot(x, R0_plot, label=f'R0(x)^{k} / C0^{round(1-k, 2)}, color='blue')
+ax.plot(x, R1_plot, label=f'R1(x)^{k} / C1^{round(1-k, 2)}', color='red')
 
 # Set axis properties
 ax.set_xlabel('x')
