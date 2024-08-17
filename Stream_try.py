@@ -10,10 +10,10 @@ C0 = 2
 C1 = 4
 
 # Define the functions R0 and R1
-def R0(x):
+def R1(x):
     return a * x + (b - c)
 
-def R1(x):
+def R0(x):
     return a * x + b
 
 # Define the ratios with cost for R1
