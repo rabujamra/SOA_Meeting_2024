@@ -38,7 +38,7 @@ R1_plot = ratio_R1(x, k)
 
 # Create a plot
 fig, ax = plt.subplots(figsize=(10, 6))
-ax.plot(x, R0_plot, label=f'R0(x)^{k} / C0^{round(1-k, 2)}, color='blue')
+ax.plot(x, R0_plot, label=f'R0(x)^{k} / C0^{round(1-k, 2)}', color='blue')
 ax.plot(x, R1_plot, label=f'R1(x)^{k} / C1^{round(1-k, 2)}', color='red')
 
 # Set axis properties
