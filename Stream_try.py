@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 a = 2
 b = 5
 c = 3
-C0 = 2  
+C0 = 1  
 C1 = 4
 
 # Define the functions R0 and R1
