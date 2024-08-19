@@ -4,7 +4,8 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
 def calculate_model_value(R, C, k, alpha):
-    # Simplified model calculation for demonstration
+    # Your model calculation here
+    # This incorporates both k and alpha
     return (R**k / C**(1-k)) * (1 + alpha * (R/C - 1))
 
 # Streamlit app

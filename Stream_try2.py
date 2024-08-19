@@ -4,8 +4,8 @@ import plotly.graph_objects as go
 
 def calculate_model_value(R, C, k, alpha):
     # Your model calculation here
-    # This should incorporate both k and alpha
-    return value
+    # This incorporates both k and alpha
+    return (R**k / C**(1-k)) * (1 + alpha * (R/C - 1))
 
 # Streamlit app
 st.title("Interactive 3D Visualization of R/C Ratios with k and α")
