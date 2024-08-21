@@ -1,6 +1,7 @@
 import streamlit as st
 import numpy as np
 import matplotlib.pyplot as plt
+import pandas as pd
 
 # Define parameters
 a, b, c = 2, 5, 3
@@ -90,3 +91,23 @@ if show_original:
     ax.grid(True)
     
     st.pyplot(fig)
+
+# Add a table with selected x values, treated and untreated ratios, and their delta
+sample_indices = np.linspace(0, len(x) - 1, 10, dtype=int)
+sample_x = x[sample_indices]
+R0_sample = ratio_R0(sample_x, k, alpha, R_min, R_max)
+R1_sample = ratio_R1(sample_x, k, alpha, R_min, R_max)
+delta = R1_sample - R0_sample
+
+# Create a DataFrame for the table
+data = {
+    'x': sample_x,
+    'R0 Ratio': R0_sample,
+    'R1 Ratio': R1_sample,
+    'Delta': delta
+}
+df = pd.DataFrame(data)
+
+# Show table in Streamlit
+st.write("Sample Data Table:")
+st.dataframe(df)
