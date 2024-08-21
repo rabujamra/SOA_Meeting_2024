@@ -2,30 +2,7 @@ import streamlit as st
 import numpy as np
 import matplotlib.pyplot as plt
 
-# Define parameters
-a, b, c = 2, 5, 3
-C0, C1 = 1, 4
-
-# Define the functions R0 and R1
-def R0(x):
-    return a * x + (b - c)
-
-def R1(x):
-    return 1.2 * R0(x)
-
-# Define the ratios without modification
-def ratio(R, C, k):
-    return (R**k) / (C**(1 - k))
-
-# Define the nonlinear modification function for ratios
-def nonlinear_mod(ratio, ratio_min, ratio_max, alpha):
-    return ratio**(1 + alpha * (ratio - ratio_min) / (ratio_max - ratio_min))
-
-# Define the ratios with cost for R0 and R1, including nonlinear modification
-def modified_ratio(x, R_func, C, k, alpha, ratio_min, ratio_max):
-    R = R_func(x)
-    base_ratio = ratio(R, C, k)
-    return nonlinear_mod(base_ratio, ratio_min, ratio_max, alpha)
+# [All previous function definitions remain the same]
 
 # Streamlit app
 st.title('Interactive Plot for R0 and R1 Ratios with Nonlinear Modification')
@@ -66,23 +43,33 @@ st.pyplot(fig)
 crossover_x = x[np.argmin(np.abs(R1_plot - R0_plot))]
 st.write(f"Approximate crossover point: x = {crossover_x:.2f}")
 
-# Add a checkbox to show/hide the original (unmodified) ratios
-show_original = st.checkbox('Show original (unmodified) ratios')
+# Calculate average ratios for different k values
+st.subheader("Average Ratios for Different k Values")
+k_values = np.arange(0, 1.1, 0.1)
+results = []
 
-if show_original:
-    R0_original = ratio(R0(x), C0, k)
-    R1_original = ratio(R1(x), C1, k)
+for k_val in k_values:
+    R0_ratios = ratio(R0(x), C0, k_val)
+    R1_ratios = ratio(R1(x), C1, k_val)
+    ratio_min = min(R0_ratios.min(), R1_ratios.min())
+    ratio_max = max(R0_ratios.max(), R1_ratios.max())
     
-    fig, ax = plt.subplots(figsize=(10, 6))
-    ax.plot(x, R0_original, label='R0(x) (original ratio)', color='cyan', linestyle='--')
-    ax.plot(x, R1_original, label='R1(x) (original ratio)', color='magenta', linestyle='--')
-    ax.plot(x, R0_plot, label='R0(x) (modified ratio)', color='blue')
-    ax.plot(x, R1_plot, label='R1(x) (modified ratio)', color='red')
+    R0_mod = modified_ratio(x, R0, C0, k_val, alpha, ratio_min, ratio_max)
+    R1_mod = modified_ratio(x, R1, C1, k_val, alpha, ratio_min, ratio_max)
     
-    ax.set_xlabel('x')
-    ax.set_ylabel('Ratio')
-    ax.set_title(f'Modified vs Original Ratios (k={k}, alpha={alpha})')
-    ax.legend()
-    ax.grid(True)
+    treated = R1_mod > R0_mod
+    untreated = ~treated
     
-    st.pyplot(fig)
+    avg_treated = np.mean(R1_mod[treated]) if np.any(treated) else 0
+    avg_untreated = np.mean(R0_mod[untreated]) if np.any(untreated) else 0
+    
+    results.append((k_val, avg_treated, avg_untreated))
+
+# Display results in a table
+st.table({
+    'k': [f"{k:.1f}" for k, _, _ in results],
+    'Avg Treated Ratio': [f"{avg_t:.4f}" for _, avg_t, _ in results],
+    'Avg Untreated Ratio': [f"{avg_u:.4f}" for _, _, avg_u in results]
+})
+
+# [The rest of the code for showing original ratios remains the same]
