@@ -73,11 +73,11 @@ st.subheader(f"Delta between Treated and Untreated Ratios")
 # Calculate delta
 delta = R1_plot - R0_plot
 
-# Create a DataFrame for the x values and delta
+# Create a DataFrame for the x values and modified ratios
 data = {
     'x': x,
-    'Treated Ratio': R1_plot,
-    'Untreated Ratio': R0_plot,
+    'Treated Ratio (Modified)': R1_plot,
+    'Untreated Ratio (Modified)': R0_plot,
     'Delta': delta
 }
 
