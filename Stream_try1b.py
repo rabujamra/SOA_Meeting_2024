@@ -25,8 +25,8 @@ def nonlinear_mod(ratio, ratio_min, ratio_max, alpha):
 # Define the ratios with cost for R0 and R1, including nonlinear modification
 def modified_ratio(x, R_func, C, k, alpha, ratio_min, ratio_max):
     R = R_func(x)
-    base_ratio = ratio(R, C, k)
-    return nonlinear_mod(base_ratio, ratio_min, ratio_max, alpha)
+    base_ratio = ratio(R, C, k)  # Compute the base ratio
+    return nonlinear_mod(base_ratio, ratio_min, ratio_max, alpha)  # Apply nonlinear modification to the base ratio
 
 # Streamlit app
 st.title('Interactive Plot for R0 and R1 Ratios with Nonlinear Modification')
