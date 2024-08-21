@@ -1,6 +1,6 @@
-import streamlit as st
 import numpy as np
 import matplotlib.pyplot as plt
+import pandas as pd
 
 # Define parameters
 a = 2
@@ -16,37 +16,57 @@ def R0(x):
 def R1(x):
     return a * x + (b - c)
 
-# Define the ratios with cost using the adjusted formula
+# Define the ratios with cost for R0 and R1
 def ratio_R0(x, k):
-    return 1 / (R0(x)**k * C0**(1 - k))
+    return (R0(x)**k) / (C0**(1 - k))
 
 def ratio_R1(x, k):
-    return 1 / (R1(x)**k * C1**(1 - k))
-
-# Streamlit app
-st.title('Interactive Plot for R0 and R1 Ratios')
-
-# Slider for k value
-k = st.slider('Select value of k', min_value=0.0, max_value=1.0, value=0.5, step=0.01)
+    return (R1(x)**k) / (C1**(1 - k))
 
 # Define a range of x values
 x = np.linspace(0, 10, 100)
+
+# Slider value for k
+k = 0.5  # You can change this value as needed
 
 # Compute the ratios
 R0_plot = ratio_R0(x, k)
 R1_plot = ratio_R1(x, k)
 
+# Combine data into a DataFrame for ranking
+data = pd.DataFrame({
+    'x': x,
+    'R0': R0_plot,
+    'R1': R1_plot,
+    'Ratio_R0': ratio_R0(x, k),
+    'Ratio_R1': ratio_R1(x, k)
+})
+
+# Rank the data based on the ratio for R0 and R1
+data['Rank_R0'] = data['Ratio_R0'].rank(ascending=False)
+data['Rank_R1'] = data['Ratio_R1'].rank(ascending=False)
+
 # Create a plot
-fig, ax = plt.subplots(figsize=(10, 6))
-ax.plot(x, R0_plot, label=f'1 / (R0(x)^{k} * C0^{round(1-k, 2)})', color='blue')
-ax.plot(x, R1_plot, label=f'1 / (R1(x)^{k} * C1^{round(1-k, 2)})', color='red')
+fig, ax = plt.subplots(figsize=(12, 6))
+
+# Plot the ratios
+ax.plot(data['x'], data['Ratio_R0'], label='Ratio R0(x)', color='blue')
+ax.plot(data['x'], data['Ratio_R1'], label='Ratio R1(x)', color='red')
+
+# Highlight the ranks
+scatter_R0 = ax.scatter(data['x'], data['Ratio_R0'], c=data['Rank_R0'], cmap='Blues', label='Rank R0')
+scatter_R1 = ax.scatter(data['x'], data['Ratio_R1'], c=data['Rank_R1'], cmap='Reds', label='Rank R1')
 
 # Set axis properties
 ax.set_xlabel('x')
 ax.set_ylabel('Ratio')
-ax.set_title(f'Ratios for k={k}')
+ax.set_title(f'Ratios and Ranking for k={k}')
 ax.legend()
 ax.grid(True)
 
-# Show plot in Streamlit
-st.pyplot(fig)
+# Add colorbar for ranking
+cbar = plt.colorbar(scatter_R0, ax=ax, label='Rank for R0')
+cbar = plt.colorbar(scatter_R1, ax=ax, label='Rank for R1')
+
+# Show plot
+plt.show()
