@@ -11,10 +11,10 @@ C1 = 1/4
 
 # Define the functions R0 and R1
 def R0(x):
-    return a * x + (b - c)
+    return a * x + b
 
 def R1(x):
-    return .8*R0(x) #a * x + b
+    return a * x + (b - c)
 
 # Define the ratios with cost for R1
 def ratio_R0(x, k):
