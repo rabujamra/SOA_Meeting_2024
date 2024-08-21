@@ -25,7 +25,7 @@ def ratio_R1(x, k):
     return (R1(x)**k) / (C1**(1 - k))
 
 # Streamlit app
-st.title('Interactive Plot for Ranking Scenario')
+st.title('Interactive Plot for R0 and R1 Ratios with Ranking')
 
 # Slider for k value
 k = st.slider('Select value of k', min_value=0.0, max_value=1.0, value=0.5, step=0.01)
@@ -46,7 +46,7 @@ data = pd.DataFrame({
     'Ratio_R1': ratio_R1(x, k)
 })
 
-# Rank the data based on the ratio for R0 and R1
+# Rank the data based on the ratio for R0 and R1 (descending order)
 data['Rank_R0'] = data['Ratio_R0'].rank(ascending=False)
 data['Rank_R1'] = data['Ratio_R1'].rank(ascending=False)
 
@@ -54,8 +54,8 @@ data['Rank_R1'] = data['Ratio_R1'].rank(ascending=False)
 fig, ax = plt.subplots(figsize=(12, 6))
 
 # Plot the ratios
-ax.plot(data['x'], data['Ratio_R0'], label='Ratio R0(x)', color='blue')
-ax.plot(data['x'], data['Ratio_R1'], label='Ratio R1(x)', color='red')
+ax.plot(data['x'], data['Ratio_R0'], label=f'Ratio R0(x)', color='blue')
+ax.plot(data['x'], data['Ratio_R1'], label=f'Ratio R1(x)', color='red')
 
 # Highlight the ranks
 scatter_R0 = ax.scatter(data['x'], data['Ratio_R0'], c=data['Rank_R0'], cmap='Blues', label='Rank R0', alpha=0.6)
