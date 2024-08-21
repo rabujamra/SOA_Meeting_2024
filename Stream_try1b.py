@@ -1,7 +1,6 @@
 import streamlit as st
 import numpy as np
 import matplotlib.pyplot as plt
-import pandas as pd
 
 # Define parameters
 a, b, c = 2, 5, 3
@@ -12,30 +11,25 @@ def R0(x):
     return a * x + (b - c)
 
 def R1(x):
-    return 1.2 * R0(x)
+    return a * x + b
 
-# Define the sigmoid function
-def sigmoid(x):
-    return 1 / (1 + np.exp(-x))
+# Define the nonlinear modification function
+def nonlinear_mod(R, R_min, R_max, alpha):
+    return R**(1 + alpha * (R - R_min) / (R_max - R_min))
 
-# Define the nonlinear modification function using sigmoid
-def sigmoid_mod(R, R_min, R_max, alpha):
-    sigmoid_value = sigmoid((R - R_min) / (R_max - R_min) - 0.5)
-    return R * (1 + alpha * sigmoid_value)
-
-# Define the ratios with cost for R0 and R1, including sigmoid modification
+# Define the ratios with cost for R0 and R1, including nonlinear modification
 def ratio_R0(x, k, alpha, R_min, R_max):
     R = R0(x)
-    R_mod = sigmoid_mod(R, R_min, R_max, alpha)
+    R_mod = nonlinear_mod(R, R_min, R_max, alpha)
     return (R_mod**k) / (C0**(1 - k))
 
 def ratio_R1(x, k, alpha, R_min, R_max):
     R = R1(x)
-    R_mod = sigmoid_mod(R, R_min, R_max, alpha)
+    R_mod = nonlinear_mod(R, R_min, R_max, alpha)
     return (R_mod**k) / (C1**(1 - k))
 
 # Streamlit app
-st.title('Interactive Plot for R0 and R1 Ratios with Sigmoid Modification')
+st.title('Interactive Plot for R0 and R1 Ratios with Nonlinear Modification')
 
 # Sliders for k and alpha values
 k = st.slider('Select value of k', min_value=0.0, max_value=1.0, value=0.5, step=0.01)
@@ -91,23 +85,3 @@ if show_original:
     ax.grid(True)
     
     st.pyplot(fig)
-
-# Add a table with selected x values, treated and untreated ratios, and their delta
-sample_indices = np.linspace(0, len(x) - 1, 10, dtype=int)
-sample_x = x[sample_indices]
-R0_sample = ratio_R0(sample_x, k, alpha, R_min, R_max)
-R1_sample = ratio_R1(sample_x, k, alpha, R_min, R_max)
-delta = R1_sample - R0_sample
-
-# Create a DataFrame for the table
-data = {
-    'x': sample_x,
-    'R0 Ratio': R0_sample,
-    'R1 Ratio': R1_sample,
-    'Delta': delta
-}
-df = pd.DataFrame(data)
-
-# Show table in Streamlit
-st.write("Sample Data Table:")
-st.dataframe(df)
