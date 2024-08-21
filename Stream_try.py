@@ -11,17 +11,17 @@ C1 = 4
 
 # Define the functions R0 and R1
 def R0(x):
-    return a * x + (b - c)
+    return -(a * x + (b - c))
 
 def R1(x):
-    return .8*R0(x) #a * x + b
+    return -.8*R0(x) #a * x + b
 
 # Define the ratios with cost for R1
 def ratio_R0(x, k):
-    return C0**k / (R0(x)**(1 - k))
+    return (R0(x)**k) / (C0**(1 - k))
 
 def ratio_R1(x, k):
-    return C1**k / (R1(x)**(1 - k))
+    return (R1(x)**k) / (C1**(1 - k))
 
 # Streamlit app
 st.title('Interactive Plot for R0 and R1 Ratios')
