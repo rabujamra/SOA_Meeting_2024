@@ -2,7 +2,30 @@ import streamlit as st
 import numpy as np
 import matplotlib.pyplot as plt
 
-# [All previous function definitions remain the same]
+# Define parameters
+a, b, c = 2, 5, 3
+C0, C1 = 1, 4
+
+# Define the functions R0 and R1
+def R0(x):
+    return a * x + (b - c)
+
+def R1(x):
+    return 1.2 * R0(x)
+
+# Define the ratio function
+def ratio(R, C, k):
+    return (R**k) / (C**(1 - k))
+
+# Define the nonlinear modification function for ratios
+def nonlinear_mod(ratio, ratio_min, ratio_max, alpha):
+    return ratio**(1 + alpha * (ratio - ratio_min) / (ratio_max - ratio_min))
+
+# Define the ratios with cost for R0 and R1, including nonlinear modification
+def modified_ratio(x, R_func, C, k, alpha, ratio_min, ratio_max):
+    R = R_func(x)
+    base_ratio = ratio(R, C, k)
+    return nonlinear_mod(base_ratio, ratio_min, ratio_max, alpha)
 
 # Streamlit app
 st.title('Interactive Plot for R0 and R1 Ratios with Nonlinear Modification')
@@ -72,4 +95,23 @@ st.table({
     'Avg Untreated Ratio': [f"{avg_u:.4f}" for _, _, avg_u in results]
 })
 
-# [The rest of the code for showing original ratios remains the same]
+# Add a checkbox to show/hide the original (unmodified) ratios
+show_original = st.checkbox('Show original (unmodified) ratios')
+
+if show_original:
+    R0_original = ratio(R0(x), C0, k)
+    R1_original = ratio(R1(x), C1, k)
+    
+    fig, ax = plt.subplots(figsize=(10, 6))
+    ax.plot(x, R0_original, label='R0(x) (original ratio)', color='cyan', linestyle='--')
+    ax.plot(x, R1_original, label='R1(x) (original ratio)', color='magenta', linestyle='--')
+    ax.plot(x, R0_plot, label='R0(x) (modified ratio)', color='blue')
+    ax.plot(x, R1_plot, label='R1(x) (modified ratio)', color='red')
+    
+    ax.set_xlabel('x')
+    ax.set_ylabel('Ratio')
+    ax.set_title(f'Modified vs Original Ratios (k={k}, alpha={alpha})')
+    ax.legend()
+    ax.grid(True)
+    
+    st.pyplot(fig)
