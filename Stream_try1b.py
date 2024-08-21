@@ -38,12 +38,6 @@ alpha = st.slider('Select value of alpha', min_value=0.0, max_value=2.0, value=0
 # Define a range of x values
 x = np.arange(0, 10.1, 0.1)  # Use .1 increment
 
-# Calculate ratio_min and ratio_max
-R0_ratios = ratio(R0(x), C0, k)
-R1_ratios = ratio(R1(x), C1, k)
-ratio_min = min(R0_ratios.min(), R1_ratios.min())
-ratio_max = max(R0_ratios.max(), R1_ratios.max())
-
 # Compute the modified ratios
 R0_plot = modified_ratio(x, R0, C0, k, alpha, ratio_min, ratio_max)
 R1_plot = modified_ratio(x, R1, C1, k, alpha, ratio_min, ratio_max)
@@ -67,19 +61,18 @@ st.pyplot(fig)
 crossover_x = x[np.argmin(np.abs(R1_plot - R0_plot))]
 st.write(f"Approximate crossover point: x = {crossover_x:.2f}")
 
-# Calculate and display ratios for the current k value
-st.subheader(f"Ratios for k = {k:.2f}")
+# Calculate and display the delta for each x value
+st.subheader(f"Delta between Treated and Untreated Ratios")
 
-# Compute treated/untreated values and delta
-treated = R1_plot > R0_plot
-untreated = ~treated
+# Calculate delta
+delta = R1_plot - R0_plot
 
-# Create a DataFrame for the treated/untreated values and delta
+# Create a DataFrame for the x values and delta
 data = {
     'x': x,
-    'Treated Ratio': np.where(treated, R1_plot, np.nan),
-    'Untreated Ratio': np.where(untreated, R0_plot, np.nan),
-    'Delta': np.where(treated, R1_plot - R0_plot, np.nan)
+    'Treated Ratio': R1_plot,
+    'Untreated Ratio': R0_plot,
+    'Delta': delta
 }
 
 df = pd.DataFrame(data)
