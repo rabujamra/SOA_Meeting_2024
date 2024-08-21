@@ -38,6 +38,12 @@ alpha = st.slider('Select value of alpha', min_value=0.0, max_value=2.0, value=0
 # Define a range of x values
 x = np.arange(0, 10.1, 0.1)  # Use .1 increment
 
+# Calculate ratio_min and ratio_max
+R0_ratios = ratio(R0(x), C0, k)
+R1_ratios = ratio(R1(x), C1, k)
+ratio_min = min(R0_ratios.min(), R1_ratios.min())
+ratio_max = max(R0_ratios.max(), R1_ratios.max())
+
 # Compute the modified ratios
 R0_plot = modified_ratio(x, R0, C0, k, alpha, ratio_min, ratio_max)
 R1_plot = modified_ratio(x, R1, C1, k, alpha, ratio_min, ratio_max)
