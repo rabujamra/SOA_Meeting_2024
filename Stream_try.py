@@ -18,10 +18,10 @@ def R1(x):
 
 # Define the ratios with cost for R1
 def ratio_R0(x, k):
-    return (R0(x)**k) / (C0**(1 - k))
+    return (C0(x)**k) / (R0**(1 - k))
 
 def ratio_R1(x, k):
-    return (R1(x)**k) / (C1**(1 - k))
+    return (C1(x)**k) / (R1**(1 - k))
 
 # Streamlit app
 st.title('Interactive Plot for R0 and R1 Ratios')
