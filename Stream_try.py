@@ -11,17 +11,17 @@ C1 = 4
 
 # Define the functions R0 and R1
 def R0(x):
-    return a * x + (b-c)
+    return a * x + b
 
 def R1(x):
-    return a * x + (b )
+    return a * x + (b - c)
 
-# Define the ratios with cost for R1
+# Define the ratios with cost using the adjusted formula
 def ratio_R0(x, k):
-    return (R0(x)**k) / (C0**(1 - k))
+    return 1 / (R0(x)**k * C0**(1 - k))
 
 def ratio_R1(x, k):
-    return (R1(x)**k) / (C1**(1 - k))
+    return 1 / (R1(x)**k * C1**(1 - k))
 
 # Streamlit app
 st.title('Interactive Plot for R0 and R1 Ratios')
@@ -38,8 +38,8 @@ R1_plot = ratio_R1(x, k)
 
 # Create a plot
 fig, ax = plt.subplots(figsize=(10, 6))
-ax.plot(x, R0_plot, label=f'R0(x)^{k} / C0^{round(1-k, 2)}', color='blue')
-ax.plot(x, R1_plot, label=f'R1(x)^{k} / C1^{round(1-k, 2)}', color='red')
+ax.plot(x, R0_plot, label=f'1 / (R0(x)^{k} * C0^{round(1-k, 2)})', color='blue')
+ax.plot(x, R1_plot, label=f'1 / (R1(x)^{k} * C1^{round(1-k, 2)})', color='red')
 
 # Set axis properties
 ax.set_xlabel('x')
