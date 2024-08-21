@@ -18,13 +18,13 @@ def R1(x):
 def ratio(R, C, k):
     return (R**k) / (C**(1 - k))
 
-# Define the logarithmic modification function for the ratio
-def modified_ratio_log(x, R_func, C, k, beta, ratio_min, ratio_max):
+# Define the power modification function for the ratio
+def modified_ratio_power(x, R_func, C, k, beta, ratio_min, ratio_max):
     base_ratio = ratio(R_func(x), C, k)
-    return base_ratio * (1 + beta * np.log(1 + (base_ratio - ratio_min) / (ratio_max - ratio_min)))
+    return base_ratio**(1 + beta * (base_ratio - ratio_min) / (ratio_max - ratio_min))
 
 # Streamlit app
-st.title('Interactive Plot for R0 and R1 Ratios with Logarithmic Modification')
+st.title('Interactive Plot for R0 and R1 Ratios with Power Modification')
 
 # Sliders for k and beta values
 k = st.slider('Select value of k', min_value=0.0, max_value=1.0, value=0.5, step=0.01)
@@ -40,13 +40,13 @@ ratio_min = min(R0_ratios.min(), R1_ratios.min())
 ratio_max = max(R0_ratios.max(), R1_ratios.max())
 
 # Compute the modified ratios
-R0_plot = modified_ratio_log(x, R0, C0, k, beta, ratio_min, ratio_max)
-R1_plot = modified_ratio_log(x, R1, C1, k, beta, ratio_min, ratio_max)
+R0_plot = modified_ratio_power(x, R0, C0, k, beta, ratio_min, ratio_max)
+R1_plot = modified_ratio_power(x, R1, C1, k, beta, ratio_min, ratio_max)
 
 # Create a plot
 fig, ax = plt.subplots(figsize=(10, 6))
-ax.plot(x, R0_plot, label=f'R0(x) (logarithmic modification)', color='blue')
-ax.plot(x, R1_plot, label=f'R1(x) (logarithmic modification)', color='red')
+ax.plot(x, R0_plot, label=f'R0(x) (power modification)', color='blue')
+ax.plot(x, R1_plot, label=f'R1(x) (power modification)', color='red')
 
 # Set axis properties
 ax.set_xlabel('x')
