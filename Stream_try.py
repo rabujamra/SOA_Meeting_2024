@@ -14,7 +14,7 @@ def R0(x):
     return a * x + (b - c)
 
 def R1(x):
-    return 1.5 * (a * x + (b - c)) #a * x + b
+    return .8*R0(x) #a * x + b
 
 # Define the ratios with cost for R1
 def ratio_R0(x, k):
