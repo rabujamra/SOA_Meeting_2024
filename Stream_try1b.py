@@ -35,8 +35,8 @@ st.title('Interactive Plot for R0 and R1 Ratios with Nonlinear Modification')
 k = st.slider('Select value of k', min_value=0.0, max_value=1.0, value=0.5, step=0.01)
 alpha = st.slider('Select value of alpha', min_value=0.0, max_value=2.0, value=0.5, step=0.01)
 
-# Define a range of x values
-x = np.arange(0, 10.1, 0.1)  # Use .1 increment
+# Define a range of x values from 1 to 10 with 10 values
+x = np.arange(1, 11, 1)  # 1 to 10 inclusive
 
 # Calculate ratio_min and ratio_max
 R0_ratios = ratio(R0(x), C0, k)
