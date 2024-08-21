@@ -1,3 +1,4 @@
+import streamlit as st
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -23,11 +24,14 @@ def ratio_R0(x, k):
 def ratio_R1(x, k):
     return (R1(x)**k) / (C1**(1 - k))
 
+# Streamlit app
+st.title('Interactive Plot for Ranking Scenario')
+
+# Slider for k value
+k = st.slider('Select value of k', min_value=0.0, max_value=1.0, value=0.5, step=0.01)
+
 # Define a range of x values
 x = np.linspace(0, 10, 100)
-
-# Slider value for k
-k = 0.5  # You can change this value as needed
 
 # Compute the ratios
 R0_plot = ratio_R0(x, k)
@@ -54,8 +58,8 @@ ax.plot(data['x'], data['Ratio_R0'], label='Ratio R0(x)', color='blue')
 ax.plot(data['x'], data['Ratio_R1'], label='Ratio R1(x)', color='red')
 
 # Highlight the ranks
-scatter_R0 = ax.scatter(data['x'], data['Ratio_R0'], c=data['Rank_R0'], cmap='Blues', label='Rank R0')
-scatter_R1 = ax.scatter(data['x'], data['Ratio_R1'], c=data['Rank_R1'], cmap='Reds', label='Rank R1')
+scatter_R0 = ax.scatter(data['x'], data['Ratio_R0'], c=data['Rank_R0'], cmap='Blues', label='Rank R0', alpha=0.6)
+scatter_R1 = ax.scatter(data['x'], data['Ratio_R1'], c=data['Rank_R1'], cmap='Reds', label='Rank R1', alpha=0.6)
 
 # Set axis properties
 ax.set_xlabel('x')
@@ -68,5 +72,5 @@ ax.grid(True)
 cbar = plt.colorbar(scatter_R0, ax=ax, label='Rank for R0')
 cbar = plt.colorbar(scatter_R1, ax=ax, label='Rank for R1')
 
-# Show plot
-plt.show()
+# Show plot in Streamlit
+st.pyplot(fig)
