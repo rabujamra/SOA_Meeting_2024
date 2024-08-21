@@ -18,18 +18,17 @@ def R1(x):
 def ratio(R, C, k):
     return (R**k) / (C**(1 - k))
 
-# Define the exponential modification function for ratios
-def modified_ratio(x, R_func, C, k, alpha, ratio_min, ratio_max):
-    R = R_func(x)
-    base_ratio = ratio(R, C, k)
-    return np.exp(alpha * (base_ratio - ratio_min) / (ratio_max - ratio_min)) * base_ratio
+# Define the logarithmic modification function for the ratio
+def modified_ratio_log(x, R_func, C, k, beta, ratio_min, ratio_max):
+    base_ratio = ratio(R_func(x), C, k)
+    return base_ratio * (1 + beta * np.log(1 + (base_ratio - ratio_min) / (ratio_max - ratio_min)))
 
 # Streamlit app
-st.title('Interactive Plot for R0 and R1 Ratios with Exponential Modification')
+st.title('Interactive Plot for R0 and R1 Ratios with Logarithmic Modification')
 
-# Sliders for k and alpha values
+# Sliders for k and beta values
 k = st.slider('Select value of k', min_value=0.0, max_value=1.0, value=0.5, step=0.01)
-alpha = st.slider('Select value of alpha', min_value=0.0, max_value=2.0, value=0.5, step=0.01)
+beta = st.slider('Select value of beta', min_value=0.0, max_value=2.0, value=0.5, step=0.01)
 
 # Define a range of x values
 x = np.linspace(1, 10, 10)
@@ -41,18 +40,18 @@ ratio_min = min(R0_ratios.min(), R1_ratios.min())
 ratio_max = max(R0_ratios.max(), R1_ratios.max())
 
 # Compute the modified ratios
-R0_plot = modified_ratio(x, R0, C0, k, alpha, ratio_min, ratio_max)
-R1_plot = modified_ratio(x, R1, C1, k, alpha, ratio_min, ratio_max)
+R0_plot = modified_ratio_log(x, R0, C0, k, beta, ratio_min, ratio_max)
+R1_plot = modified_ratio_log(x, R1, C1, k, beta, ratio_min, ratio_max)
 
 # Create a plot
 fig, ax = plt.subplots(figsize=(10, 6))
-ax.plot(x, R0_plot, label=f'R0(x) (modified ratio)', color='blue')
-ax.plot(x, R1_plot, label=f'R1(x) (modified ratio)', color='red')
+ax.plot(x, R0_plot, label=f'R0(x) (logarithmic modification)', color='blue')
+ax.plot(x, R1_plot, label=f'R1(x) (logarithmic modification)', color='red')
 
 # Set axis properties
 ax.set_xlabel('x')
 ax.set_ylabel('Modified Ratio')
-ax.set_title(f'Modified Ratios for k={k}, alpha={alpha}')
+ax.set_title(f'Modified Ratios for k={k}, beta={beta}')
 ax.legend()
 ax.grid(True)
 
