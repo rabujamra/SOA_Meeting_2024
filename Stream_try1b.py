@@ -63,10 +63,6 @@ ax.grid(True)
 # Show plot in Streamlit
 st.pyplot(fig)
 
-# Add a section to show the crossover point
-crossover_x = x[np.argmin(np.abs(R1_plot - R0_plot))]
-st.write(f"Approximate crossover point: x = {crossover_x:.2f}")
-
 # Calculate and display the delta for each x value
 st.subheader(f"Delta between Treated and Untreated Ratios")
 
