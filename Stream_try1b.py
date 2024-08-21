@@ -18,18 +18,22 @@ def R1(x):
 def ratio(R, C, k):
     return (R**k) / (C**(1 - k))
 
-# Define a combined nonlinear modification function for ratios
-def modified_ratio_combined(x, R_func, C, k, beta, ratio_min, ratio_max):
+# Define the sigmoid function
+def sigmoid(z, alpha):
+    return 1 / (1 + np.exp(-alpha * z))
+
+# Define a nonlinear modification function for ratios using sigmoid
+def modified_ratio_sigmoid(x, R_func, C, k, alpha, ratio_min, ratio_max):
     base_ratio = ratio(R_func(x), C, k)
-    log_mod = np.log1p((base_ratio - ratio_min) / (ratio_max - ratio_min))
-    return base_ratio**(1 + beta * log_mod)
+    scaled_ratio = (base_ratio - ratio_min) / (ratio_max - ratio_min)
+    return base_ratio * sigmoid(scaled_ratio, alpha)
 
 # Streamlit app
-st.title('Interactive Plot for R0 and R1 Ratios with Nonlinear Modification')
+st.title('Interactive Plot for R0 and R1 Ratios with Sigmoid Modification')
 
-# Sliders for k and beta values
+# Sliders for k and alpha values
 k = st.slider('Select value of k', min_value=0.0, max_value=1.0, value=0.5, step=0.01)
-beta = st.slider('Select value of beta', min_value=0.0, max_value=2.0, value=0.5, step=0.01)
+alpha = st.slider('Select value of alpha for sigmoid', min_value=0.0, max_value=10.0, value=1.0, step=0.1)
 
 # Define a range of x values
 x = np.linspace(1, 10, 10)
@@ -40,9 +44,9 @@ R1_ratios = ratio(R1(x), C1, k)
 ratio_min = min(R0_ratios.min(), R1_ratios.min())
 ratio_max = max(R0_ratios.max(), R1_ratios.max())
 
-# Compute the modified ratios
-R0_plot = modified_ratio_combined(x, R0, C0, k, beta, ratio_min, ratio_max)
-R1_plot = modified_ratio_combined(x, R1, C1, k, beta, ratio_min, ratio_max)
+# Compute the modified ratios using sigmoid
+R0_plot = modified_ratio_sigmoid(x, R0, C0, k, alpha, ratio_min, ratio_max)
+R1_plot = modified_ratio_sigmoid(x, R1, C1, k, alpha, ratio_min, ratio_max)
 
 # Create a plot
 fig, ax = plt.subplots(figsize=(10, 6))
@@ -52,7 +56,7 @@ ax.plot(x, R1_plot, label=f'R1(x) (modified ratio)', color='red')
 # Set axis properties
 ax.set_xlabel('x')
 ax.set_ylabel('Modified Ratio')
-ax.set_title(f'Modified Ratios for k={k}, beta={beta}')
+ax.set_title(f'Modified Ratios for k={k}, alpha={alpha}')
 ax.legend()
 ax.grid(True)
 
